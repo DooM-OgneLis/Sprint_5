@@ -4,40 +4,41 @@ from locators import Locators
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-#в задании указано произвести 4 раза вход с разных кнопок, одна-ко все методы ведут на единую страницу входа,
-#а после авторизации, происходит переадресация на домашнюю страницу, что делает данные тесты дубликатами 1 теста.
-#будет произведена проверка перехода к форме входа 4 разными методами, 1 вход и 1 выход,
-#и того 6 тестов без повторных действий входа и выхода из аккаунта
+#компановка дубля кода в единую общую функцию
+def autorization(driver, users):
+    driver.find_element(*Locators.INPUT_MAIL).send_keys(users["eMail"])
+    driver.find_element(*Locators.INPUT_PASS).send_keys(users["password"])
 
+    driver.find_element(*Locators.BUTTON_LOG_IN).click()
+
+    WebDriverWait(driver, 10).until(lambda d: d.current_url != Data.stellarburgers_login)
+    #проверка входа в аккаун производится входом в профиль
+    driver.find_element(*Locators.URL_PERSONAL_ACCOUNT).click()
+
+    WebDriverWait(driver, 10).until(lambda d: d.current_url != Data.stellarburgers_url)
+    WebDriverWait(driver, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
 
 class TestLogin:
-    #проверка перехода на страницу авторизации из разных мест
+    #проверка перехода на страницу авторизации из разных мест и авторизация 
     @pytest.mark.parametrize('url, locator',[[Data.stellarburgers_url, Locators.URL_PERSONAL_ACCOUNT],[Data.stellarburgers_url, Locators.BUTTON_LOG_IN_ACCOUNT],[Data.stellarburgers_forgot_password, Locators.URL_AUTHORIZATION],[Data.stellarburgers_register, Locators.URL_AUTHORIZATION]])
-    def test_goto_login_form_open_url(self, driver,url,locator):
+    def test_goto_login_form_open_url(self, driver, users, url, locator):
         driver.get(url)
 
         driver.find_element(*locator).click()
-
+        #ожидаем не только смену страницы, но и полную ее загрузку
         WebDriverWait(driver, 10).until(lambda d: d.current_url != url)
+        WebDriverWait(driver, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
         
-        assert driver.current_url == Data.stellarburgers_login
+        autorization(driver, users)
+        #в некоторых случая возникает конфликт проверки ввиду отсутствия "/profile" в адресе при переходе в личный кабинет
+        assert driver.current_url in Data.stellarburgers_account
 
-    #проверка авторизации на сайте
+    #проверка прямой авторизации на сайте
     def test_loggin_autorization_complite(self, driver, users):
         driver.get(Data.stellarburgers_login)
 
-        driver.find_element(*Locators.INPUT_MAIL).send_keys(users["eMail"])
-        driver.find_element(*Locators.INPUT_PASS).send_keys(users["password"])
-
-        driver.find_element(*Locators.BUTTON_LOG_IN).click()
-
-        WebDriverWait(driver, 10).until(lambda d: d.current_url != Data.stellarburgers_login)
-        #проверка входа в аккаун производится входом в профиль
-        driver.find_element(*Locators.URL_PERSONAL_ACCOUNT).click()
-
-        WebDriverWait(driver, 10).until(lambda d: d.current_url != Data.stellarburgers_url)
-        WebDriverWait(driver, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
-        
+        autorization(driver, users)
+        #в некоторых случая возникает конфликт проверки ввиду отсутствия "/profile" в адресе при переходе в личный кабинет
         assert driver.current_url in Data.stellarburgers_account
 
     #проверка выхода из аккаунта после авторизации
@@ -66,5 +67,5 @@ class TestLogin:
 
         WebDriverWait(driver, 10).until(lambda d: d.current_url != Data.stellarburgers_url)
         WebDriverWait(driver, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
-
+        #в некоторых случая возникает конфликт проверки ввиду отсутствия "/profile" в адресе при переходе в личный кабинет
         assert driver.current_url in Data.stellarburgers_login

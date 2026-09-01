@@ -26,4 +26,4 @@ class Locators:
     BUTTON_LOG_OFF = (By.XPATH, "//button[text() = 'Выход']") #Кнопка выхода из аккаунта в личном кабинете
 
     #локаторы главной страницы "Конструктор"
-    LIST_ANCHOR_MENU = (By.XPATH, "//div[contains(@style, 'display: flex;')]/div")
+    LIST_ANCHOR_MENU = (By.XPATH, "//div[contains(@style, 'display: flex;')]/div") #собирает все объекты верхнего меню сборки бургера

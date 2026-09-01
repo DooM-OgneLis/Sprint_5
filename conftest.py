@@ -1,7 +1,6 @@
 import pytest
 import random
 from selenium import webdriver
-from selenium.webdriver.common.by import By 
 
 @pytest.fixture(scope="function")
 def driver():

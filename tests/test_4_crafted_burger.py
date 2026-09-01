@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 #выбран метод проверки скролла путем отслеживания универсального токена класса в узлах
-#Для проверки можно скомпоновать в единый тест скролла меню с использованием параметизщации 
+#Для проверки можно скомпоновать в единый тест скролла меню с использованием параметизации 
 
 class TestCraftedBurger:
 

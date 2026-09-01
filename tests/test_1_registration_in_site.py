@@ -37,7 +37,7 @@ class TestRegistration:
         driver.find_element(*Locators.INPUT_NAME).send_keys(users["userName"])
         driver.find_element(*Locators.INPUT_MAIL).send_keys(users["eMail"])
         driver.find_element(*Locators.INPUT_PASS).send_keys(users["password"])
-
+ 
         driver.find_element(*Locators.BUTTON_REGISTRATION).click()
 
         WebDriverWait(driver, 10).until(lambda d: d.current_url != Data.stellarburgers_register)
