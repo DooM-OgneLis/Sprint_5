@@ -1,10 +1,10 @@
 class Data:
     #URL ссылки на сайте и его страницам
-    stellarburgers_url = "https://stellarburgers.education-services.ru/"
-    stellarburgers_register = stellarburgers_url+"register"
-    stellarburgers_account = stellarburgers_url+"account/profile"
-    stellarburgers_login = stellarburgers_url+"login"
-    stellarburgers_forgot_password = stellarburgers_url+"forgot-password"
+    STELLARBURGERS_URL = "https://stellarburgers.education-services.ru/"
+    STELLARBURGERS_REGISTER = STELLARBURGERS_URL + "register"
+    STELLARBURGERS_ACCOUNT = STELLARBURGERS_URL + "account/profile"
+    STELLARBURGERS_LOGIN = STELLARBURGERS_URL + "login"
+    STELLARBURGERS_FORGOT_PASSWORD = STELLARBURGERS_URL + "forgot-password"
 
-    #ключи классов
-    key_anchor_pozition = "tab_tab_type_current__2BEPc"
+    #набор доменов почты
+    EMAIL_DOMAIN = ["gmail.com", "mail.ru", "yandex.ru", "ya.ru", "outlook.com"]

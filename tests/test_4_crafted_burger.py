@@ -1,31 +1,30 @@
 import pytest
+import common 
 from data import Data
 from locators import Locators
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-#выбран метод проверки скролла путем отслеживания универсального токена класса в узлах
-#Для проверки можно скомпоновать в единый тест скролла меню с использованием параметизации 
-
 class TestCraftedBurger:
 
     @pytest.mark.parametrize('anhor',[0,1,2])
-    def test_scroll_move_anhor(self,driver,anhor):
-        driver.get(Data.stellarburgers_url)
+    def test_scroll_move_anhor_in_container(self,driver,anhor):
+        driver.get(Data.STELLARBURGERS_URL)
 
-        WebDriverWait(driver, 5).until(EC.visibility_of_element_located(Locators.LIST_ANCHOR_MENU))
-        list_anchor = driver.find_elements(*Locators.LIST_ANCHOR_MENU)
-        #для проверки перехода к пункту "Булочки" необходимо сместить фокус
-        if anhor == 0:
-            list_anchor[anhor+1].click()
+        WebDriverWait(driver, 5).until(EC.visibility_of_element_located(Locators.LIST_TOP_MENU))
+        #Заносим в переменные локаторы
+        list_top_menu = driver.find_elements(*Locators.LIST_TOP_MENU)
+        container = driver.find_element(*Locators.CONTAINER_ELEMENT_CONSTRUCTOR)
+        list_sections = driver.find_elements(*Locators.LIST_SECTIONS)
+        
+        #производим вычисление видимости проверяемого объекта в скролле блока
+        common.get_scroll_top(driver, container)
+        #перемещаемся к последнему элементу в списке, вычисление нужно для уменьшения затрат при добавлении новых кнопок меню раздела
+        list_top_menu[len(list_top_menu)-1].click()
+        list_top_menu[anhor].click()
+        common.wait_scroll_settled(driver, container)
+        #заносим результат обнаружения в переменную
+        result = common.is_section_visible(driver, container, list_sections[anhor])
 
-        list_anchor[anhor].click()
-
-        #обновляем данные в переменной
-        list_anchor = driver.find_elements(*Locators.LIST_ANCHOR_MENU)
-
-        #для проверки перехода необходимо получить классы объекта
-        class_attr = list_anchor[anhor].get_attribute('class')
-        class_names = class_attr.split()
-
-        assert Data.key_anchor_pozition in class_names
+        assert result
+        
