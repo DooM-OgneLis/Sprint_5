@@ -1,4 +1,3 @@
-import time
 from data import Data
 from locators import Locators
 from selenium.webdriver.support.ui import WebDriverWait
