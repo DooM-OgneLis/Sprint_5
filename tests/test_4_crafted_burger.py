@@ -1,5 +1,5 @@
 import pytest
-import common 
+from common import is_element_in_container
 from data import Data
 from locators import Locators
 from selenium.webdriver.support.ui import WebDriverWait
@@ -16,15 +16,17 @@ class TestCraftedBurger:
         list_top_menu = driver.find_elements(*Locators.LIST_TOP_MENU)
         container = driver.find_element(*Locators.CONTAINER_ELEMENT_CONSTRUCTOR)
         list_sections = driver.find_elements(*Locators.LIST_SECTIONS)
+        last_list_top = len(list_top_menu)-1
         
-        #производим вычисление видимости проверяемого объекта в скролле блока
-        common.get_scroll_top(driver, container)
         #перемещаемся к последнему элементу в списке, вычисление нужно для уменьшения затрат при добавлении новых кнопок меню раздела
-        list_top_menu[len(list_top_menu)-1].click()
+        list_top_menu[last_list_top].click()
+        WebDriverWait(driver, 10).until(lambda a: Data.KEY_ANCHOR_CLASS in list_top_menu[last_list_top].get_attribute('class'))
+        #перемещаемся к проверяемому элементу
         list_top_menu[anhor].click()
-        common.wait_scroll_settled(driver, container)
-        #заносим результат обнаружения в переменную
-        result = common.is_section_visible(driver, container, list_sections[anhor])
+        WebDriverWait(driver, 10).until(lambda a: Data.KEY_ANCHOR_CLASS in list_top_menu[anhor].get_attribute('class'))
 
-        assert result
+        #Data.KEY_ANCHOR_CLASS in list_top_menu[anhor] - уже подтвердил наличие CSS якоря в верхнем меню
+        #проверяем что элемент названия раздела находится в видимой части блока
+        
+        assert is_element_in_container(list_sections[anhor], container)
         

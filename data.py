@@ -8,3 +8,9 @@ class Data:
 
     #набор доменов почты
     EMAIL_DOMAIN = ["gmail.com", "mail.ru", "yandex.ru", "ya.ru", "outlook.com"]
+
+    #переменная класса для всех тестов регистрации, она нужна для поля "Имя"
+    USER_NAME = "Aleksey"
+
+    #ключ якоря, который появляется в кнопке меню при переходе в категорию
+    KEY_ANCHOR_CLASS = "tab_tab_type_current__2BEPc"
